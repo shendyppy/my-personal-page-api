@@ -1,0 +1,191 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum SkillCategory {
+  Frontend
+  Backend
+  DevOps
+  Database
+}
+
+enum TraitType {
+  general
+  frontend
+  backend
+  three
+  learning
+  shuffle
+}
+
+// Project Models
+model Project {
+  id          String             @id @default(uuid())
+  slug        String             @unique
+  title       String
+  description String
+  image       String
+  company     String
+  overview    String
+  scope       String?
+  industry    String?
+  highlights  ProjectHighlight[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@map("projects")
+}
+
+model ProjectHighlight {
+  id          String         @id @default(uuid())
+  highlightId String // Original ID from frontend (e.g., "highlight-1")
+  title       String
+  description String
+  impact      String[] // Array of impact strings
+  link        String?
+  projectId   String
+  project     Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  images      ProjectImage[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("project_highlights")
+}
+
+model ProjectImage {
+  id          String           @id @default(uuid())
+  link        String
+  scrollable  Boolean          @default(false)
+  highlightId String
+  highlight   ProjectHighlight @relation(fields: [highlightId], references: [id], onDelete: Cascade)
+  createdAt   DateTime         @default(now())
+
+  @@map("project_images")
+}
+
+// Skills Model
+model Skill {
+  id        String        @id @default(uuid())
+  name      String        @unique
+  level     Int // 0-100
+  category  SkillCategory
+  logo      String
+  model     String // Path to 3D model (.glb file)
+  color     String // Hex color code
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("skills")
+}
+
+// Experience Model
+model Experience {
+  id               String   @id @default(uuid())
+  experienceId     String   @unique // Original ID from frontend
+  title            String
+  company          String
+  logo             String
+  location         String
+  period           String
+  current          Boolean  @default(false)
+  description      String
+  responsibilities String[] // Array of responsibility strings
+  projects         String[] // Array of project names
+  techStack        String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("experiences")
+}
+
+// About Section Models
+model About {
+  id                      String   @id @default(uuid())
+  professionalBioTitle    String
+  professionalBioContent  String   @db.Text
+  learningJourneyTitle    String
+  learningJourneyContent  String   @db.Text
+  cvTitle                 String
+  cvPreviewImage          String
+  cvDownloadPath          String
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@map("about")
+}
+
+model SocialLink {
+  id        String   @id @default(uuid())
+  href      String
+  label     String
+  iconName  String // Store icon name as string (e.g., "Github", "Linkedin")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("social_links")
+}
+
+model TechStack {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  imageSrc  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tech_stacks")
+}
+
+model Love {
+  id        String   @id @default(uuid())
+  main      String // Main interest (e.g., "DOTA 2", "Football")
+  clubs     Club[]
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("loves")
+}
+
+model Club {
+  id        String   @id @default(uuid())
+  name      String
+  imageSrc  String
+  loveId    String
+  love      Love     @relation(fields: [loveId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("clubs")
+}
+
+// Hero Section Models
+model Hero {
+  id        String   @id @default(uuid())
+  bio       String   @db.Text // HTML string
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("hero")
+}
+
+model Trait {
+  id        String    @id @default(uuid())
+  label     String
+  type      TraitType
+  iconName  String? // Store icon name as string
+  order     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("traits")
+}
