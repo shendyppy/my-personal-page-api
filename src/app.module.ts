@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
-import { ProjectsModule } from './projects/projects.module';
-import { SkillsModule } from './skills/skills.module';
-import { ExperiencesModule } from './experiences/experiences.module';
-import { AboutModule } from './about/about.module';
-import { HeroModule } from './hero/hero.module';
+import { ProjectsModule } from './models/projects/projects.module';
+import { SkillsModule } from './models/skills/skills.module';
+import { ExperiencesModule } from './models/experiences/experiences.module';
+import { AboutModule } from './models/about/about.module';
+import { HeroModule } from './models/hero/hero.module';
 
 @Module({
   imports: [
