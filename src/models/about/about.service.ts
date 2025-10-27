@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { CreateAboutDto } from './dto/create-about.dto';
 import { UpdateAboutDto } from './dto/update-about.dto';
 
@@ -33,12 +33,6 @@ export class AboutService {
 
   async getSocialLinks() {
     return this.prisma.socialLink.findMany({
-      orderBy: { order: 'asc' },
-    });
-  }
-
-  async getTechStacks() {
-    return this.prisma.techStack.findMany({
       orderBy: { order: 'asc' },
     });
   }

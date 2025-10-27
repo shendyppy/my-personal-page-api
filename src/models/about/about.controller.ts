@@ -34,11 +34,6 @@ export class AboutController {
     return this.aboutService.getSocialLinks();
   }
 
-  @Get('tech-stacks')
-  getTechStacks() {
-    return this.aboutService.getTechStacks();
-  }
-
   @Get('loves')
   getLoves() {
     return this.aboutService.getLoves();
